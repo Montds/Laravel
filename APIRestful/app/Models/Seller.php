@@ -3,6 +3,8 @@
 namespace App\Models;
 
 //cuando se usa extends como aqui se crea un rol no una tabla
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Seller extends User
 {
     //el Seller tiene muchos productos

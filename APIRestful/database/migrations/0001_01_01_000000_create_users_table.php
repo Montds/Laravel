@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('admin')->default(User::USUARIO_REGULAR);
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

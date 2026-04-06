@@ -1,20 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\Transaction;
+namespace App\Http\Controllers\Buyer;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Controller;
-use App\Models\Transaction;
+use App\Models\Buyer;
 use Illuminate\Http\Request;
 
-class TransactionController extends ApiController
+class BuyerTransactionController extends ApiController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($id)
     {
-        $transactions = Transaction::all();
+        $buyer = Buyer::findOrFail($id);
+
+        $transactions = $buyer->transactions;
+
         return $this->showAll($transactions);
     }
 
@@ -37,16 +40,15 @@ class TransactionController extends ApiController
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Buyer $buyer)
     {
-        $transaction = Transaction::findOrFail($id);
-        return $this->showOne($transaction);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Buyer $buyer)
     {
         //
     }
@@ -54,7 +56,7 @@ class TransactionController extends ApiController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Buyer $buyer)
     {
         //
     }
@@ -62,7 +64,7 @@ class TransactionController extends ApiController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Buyer $buyer)
     {
         //
     }

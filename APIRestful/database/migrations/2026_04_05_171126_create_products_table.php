@@ -18,13 +18,15 @@ return new class extends Migration
             $table->string('description');
             $table->integer('quantity')->unsigned();
             $table->string('status')->default(Product::PRODUCTO_NO_DISPONIBLE);
-
             $table->string('image');
 
-
-            $table->foreignId('seller_id')->constrained('users');
+            // CORRECCIÓN AQUÍ:
+            $table->foreignId('seller_id')
+                ->constrained('users')
+                ->onDelete('cascade'); // Si borras al User, borra sus Products
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

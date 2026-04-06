@@ -7,15 +7,21 @@ use App\Http\Controllers\Controller;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 
-class TransactionController extends ApiController
+class TransactionSellerController extends ApiController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $id)
     {
-        $transactions = Transaction::all();
-        return $this->showAll($transactions);
+
+        //se obtiene la transaccion
+        $transaction = Transaction::findOrFail($id);
+
+        //se desglosa hasta llegar al seller
+        $seller = $transaction->product->seller;
+
+        return $this->showOne($seller);
     }
 
     /**
@@ -39,8 +45,7 @@ class TransactionController extends ApiController
      */
     public function show(string $id)
     {
-        $transaction = Transaction::findOrFail($id);
-        return $this->showOne($transaction);
+        //
     }
 
     /**

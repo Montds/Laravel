@@ -4,19 +4,26 @@ namespace App\Http\Controllers\Transaction;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 
-class TransactionController extends ApiController
+class TransactionCategoryController extends ApiController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $id)
     {
-        $transactions = Transaction::all();
-        return $this->showAll($transactions);
+        $transaction = Transaction::findOrFail($id );
+        $categories = $transaction->product->categories;
+        return $this->showAll($categories);
     }
+
+
+
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -37,16 +44,15 @@ class TransactionController extends ApiController
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Transaction $transaction)
     {
-        $transaction = Transaction::findOrFail($id);
-        return $this->showOne($transaction);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Transaction $transaction)
     {
         //
     }
@@ -54,7 +60,7 @@ class TransactionController extends ApiController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Transaction $transaction)
     {
         //
     }
@@ -62,7 +68,7 @@ class TransactionController extends ApiController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Transaction $transaction)
     {
         //
     }
