@@ -10,9 +10,7 @@ use Illuminate\Http\Request;
 
 class SellerController extends ApiController
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         $vendedores = Seller::has("products")->get();
@@ -21,17 +19,8 @@ class SellerController extends ApiController
 
     public function show(string $id)
     {
-        try
-        {
-            $vendedor = Buyer::has("products")->findOrFail($id);
-            return $this->showOne($vendedor);
-        }
-        catch (\Exception $e)
-        {
-            return response()->json(["error" => $e->getMessage()], 200);
-        }
+            $vendedor = Seller::has("products")->findOrFail($id);
+            return $this->showElement($vendedor);
     }
-
-
 
 }

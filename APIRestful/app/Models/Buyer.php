@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
+
+use App\Transformers\BuyerTransformer;
 
 class Buyer extends User
 {
+    public $transformer = BuyerTransformer::class;
 
     public function transactions()
     {

@@ -9,69 +9,16 @@ use Illuminate\Http\Request;
 
 class BuyerProductController extends ApiController
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index($id)
     {
         // Buscamos al comprador o fallamos (404)
         $buyer = Buyer::findOrFail($id);
 
 
-        $products = $buyer->transactions()
-            ->with('product')->get() // se obtienen las transacciones con el producto como campo
-            ->pluck('product') //se obtiene solo el producto
-            ->unique('id')     //se eliminan duplicados
-            ->values();        //para ordenar los datos recibidos
+        $products = $buyer->transactions()->with('product')->get()->pluck('product')->unique('id')->values();
 
-       return $this->showAll($products);
+       return $this->showElement($products);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Buyer $buyer)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Buyer $buyer)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Buyer $buyer)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Buyer $buyer)
-    {
-        //
-    }
 }

@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Buyer;
 
 use App\Http\Controllers\ApiController;
-use App\Http\Controllers\Controller;
 use App\Models\Buyer;
-use Illuminate\Http\Request;
 
 class BuyerController extends ApiController
 {
@@ -16,23 +14,14 @@ class BuyerController extends ApiController
         //aunque como solo los buyer tienen transacion en si devuelve a los buyers
 
         $compradores = Buyer::has("transactions")->get();
-        return $this->showAll($compradores);
+        return $this->showElement($compradores);
     }
 
 
     public function show(string $id)
     {
-
-        try
-        {
             $comprador = Buyer::has("transactions")->findOrFail($id);
-
-            $this->showOne($comprador);
-        }
-        catch (\Exception $e)
-        {
-            return response()->json(["error" => $e->getMessage()], 200);
-        }
+            $this->showElement($comprador);
     }
 
 }

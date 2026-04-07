@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Transformers\UserTransformer;
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -18,9 +16,10 @@ class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
 
-     use HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
     use SoftDeletes;
+
     const string USUARIO_VERIFICADO = '1';
     const string  USUARIO_NO_VERIFICADO = '0';
 
@@ -29,6 +28,9 @@ class User extends Authenticatable
 
     protected $table = 'users';
     protected $dates = ['deleted_at'];
+
+    public $transformer = UserTransformer::class;
+
     protected $fillable = [
         'name',
         'email',

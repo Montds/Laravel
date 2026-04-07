@@ -4,6 +4,8 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
+use App\Models\Seller;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -31,41 +33,33 @@ class UserController extends ApiController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
-        //validacion de campos del usuario
+
+        $seller = Seller::findOrFail($id);
+
         $datosValidados = $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users', // Agregué unique por seguridad
-            'password' => 'required|min:6|confirmed',
+            'name' => 'required',
+            'description' => 'required',
+            'quantity' => 'required|integer|min:1',
+            'image' => 'required|image',
         ]);
 
-        try {
-            // se obtienen los datos ya validados
-            $campos = $datosValidados;
+        $datosValidados['status'] = Product::PRODUCTO_NO_DISPONIBLE;
+        $datosValidados['image'] = 'im/1.jpg'; // Aquí iría tu lógica de guardado de archivos
+        $datosValidados['seller_id'] = $seller->id;
 
-            //se encripta la psssword
-            $campos['password'] = bcrypt($campos['password']);
+        // 4. Creamos el producto con el array completo
+        $product = Product::create($datosValidados);
 
-            $campos['verified'] = User::USUARIO_NO_VERIFICADO;
-            $campos['verification_token'] = User::generarVerificationToken();
-            $campos['admin'] = User::USUARIO_REGULAR;
-
-            $usuario = User::create($campos);
-
-            return $this->showOne($usuario , 201);
-
-        } catch (\Exception $e)
-        {
-            return $this->errorResponse($e->getMessage(), 200);
-        }
+        return $this->showElement($product, 201);
     }
 
     public function show(string $id)
     {
 
             $usuario = User::findOrFail($id);
-            return $this->showOne($usuario);
+            return $this->showElement($usuario);
     }
     /**
      * Show the form for editing the specified resource.
@@ -132,7 +126,7 @@ class UserController extends ApiController
             //se actualiza el usuario
             $user->save();
 
-            return $this->showOne($user);
+            return $this->showElement($user);
 
         }
         catch (\Exception $e)
@@ -152,7 +146,7 @@ class UserController extends ApiController
         {
             $user = User::findOrFail($id);
             $user->delete();
-            return $this->showOne($user);
+            return $this->showElement($user);
         }
         catch (\Exception $e)
         {

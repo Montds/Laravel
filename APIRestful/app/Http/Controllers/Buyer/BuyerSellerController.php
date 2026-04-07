@@ -10,24 +10,20 @@ use Illuminate\Http\Request;
 class BuyerSellerController extends ApiController
 {
 
-
-    /*
     public function index($id)
     {
 
         $buyer = Buyer::findOrFail($id);
 
-        // 2. Obtenemos los vendedores procesando toda la cadena en una sola sentencia
-        $sellers = $buyer->transactions// Accedemos a la relación de transacciones
-       ->with('product.seller')->get()      // Cargamos de golpe productos y sus vendedores (Eager Loading)
-        ->pluck('product')            // Extraemos los objetos 'product' de cada transacción
-        ->pluck('seller')             // De esos productos, extraemos sus respectivos 'seller'
-        ->unique('id')                // Eliminamos vendedores duplicados
-        ->values();                   // Reindexamos el array para una respuesta JSON limpia
+        $sellers = $buyer//compradores
+            ->transactions()//transacciones de los compradores
+            ->with('product.seller')->get() //transacciones con con productos que a laves tienen vendedores
+             ->pluck('product.seller') //se obtienen los vendedores
+             ->unique('id')//se eliminan repetidos
+             ->values(); //se muestra como una lista ordenada
 
-        // 3. Retornamos la respuesta filtrada
-        return $this->showAll($sellers);
+        return $this->showElement($sellers);
     }
-    */
+
 
 }

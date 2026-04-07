@@ -1,20 +1,32 @@
 <?php
 
+use App\Http\Controllers\Buyer\BuyerCategoryController;
+use App\Http\Controllers\Buyer\BuyerController;
 use App\Http\Controllers\Buyer\BuyerProductController;
 use App\Http\Controllers\Buyer\BuyerSellerController;
 use App\Http\Controllers\Buyer\BuyerTransactionController;
-use App\Http\Controllers\Categpry\CategoryController;
+use App\Http\Controllers\Category\CategoryBuyerController;
+use App\Http\Controllers\Category\CategoryController;
+use App\Http\Controllers\Category\CategoryProductController;
+use App\Http\Controllers\Category\CategorySellerController;
+use App\Http\Controllers\Category\CategoryTransactionController;
+use App\Http\Controllers\Product\ProductBuyerController;
+use App\Http\Controllers\Product\ProductBuyerTransactionController;
+use App\Http\Controllers\Product\ProductCategoryController;
 use App\Http\Controllers\Product\ProductController;
+use App\Http\Controllers\Product\ProductTransactionController;
+use App\Http\Controllers\Seller\SellerBuyerController;
+use App\Http\Controllers\Seller\SellerCategoryController;
 use App\Http\Controllers\Seller\SellerController;
+use App\Http\Controllers\Seller\SellerProductController;
+use App\Http\Controllers\Seller\SellerTransactionController;
+use App\Http\Controllers\Transaction\TransactionCategoryController;
 use App\Http\Controllers\Transaction\TransactionController;
+use App\Http\Controllers\Transaction\TransactionSellerController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Buyer\BuyerController; // 1. Importas el controlador
-
-use App\Http\Controllers\Transaction\TransactionCategoryController;
-
-use App\Http\Controllers\Transaction\TransactionSellerController;
+// 1. Importas el controlador
 
 
 //Route::get('/', function () {return view('welcome');});
@@ -22,30 +34,42 @@ use App\Http\Controllers\Transaction\TransactionSellerController;
 
 //asignacion de resource
 
-
+//esto sirve para limitar el acceso a las rutas pero las rutas deben ir dentro de los corchetes
+//Route::middleware('throttle:limitador')->group(function () {});
 
 Route::resource('buyers', BuyerController::class)->only(['index', 'show']);
+
 Route::resource('buyers.sellers', BuyerSellerController::class)->only(['index']);
 Route::resource('buyers.transactions', BuyerTransactionController::class)->only(['index']);
 Route::resource('buyers.products', BuyerProductController::class)->only(['index']);
-/**
- * Categories (Todas excepto los formularios de creación/edición)
- */
+Route::resource('buyers.categories', BuyerCategoryController::class, ['only' => ['index']]);
+
 Route::resource('categories', CategoryController::class)->except(['create', 'edit']);
+Route::resource('categories.products', CategoryProductController::class, ['only' => ['index']]);
+Route::resource('categories.sellers', CategorySellerController::class, ['only' => ['index']]);
+Route::resource('categories.transactions', CategoryTransactionController::class, ['only' => ['index']]);
+Route::resource('categories.buyers', CategoryBuyerController::class, ['only' => ['index']]);
 
-/**
- * Products (Solo listar y ver uno)
- */
+
 Route::resource('products', ProductController::class)->only(['index', 'show']);
+Route::resource('products.transactions', ProductTransactionController::class, ['only' => ['index']]);
+Route::resource('products.buyers', ProductBuyerController::class, ['only' => ['index']]);
+Route::resource('products.categories', ProductCategoryController::class, ['only' => ['index', 'update', 'destroy']]);
+Route::resource('products.buyers.transactions', ProductBuyerTransactionController::class, ['only' => ['store']]);
 
-/**
- * Transactions (Solo listar y ver uno)
- */
 Route::resource('transactions', TransactionController::class)->only(['index', 'show']);
+
 Route::resource('transactions.categories', TransactionCategoryController::class)->only(['index']);
 Route::resource('transactions.sellers', TransactionSellerController::class)->only(['index']);
 
 Route::resource('sellers', SellerController::class)->only(['index', 'show']);
-
+Route::resource('sellers.transactions', SellerTransactionController::class, ['only' => ['index']]);
+Route::resource('sellers.categories', SellerCategoryController::class, ['only' => ['index']]);
+Route::resource('sellers.buyers', SellerBuyerController::class, ['only' => ['index']]);
+Route::resource('sellers.products', SellerProductController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
 
 Route::resource('users', UserController::class);//->except(['create', 'edit']);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
