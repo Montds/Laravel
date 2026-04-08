@@ -41,7 +41,6 @@ class ProductBuyerTransactionController extends ApiController
             return $this->errorResponse('El producto no tiene la cantidad disponible requerida para esta transacción', 409);
         }
 
-        // 4. Ejecución de la transacción
         //esto es el equivalente de usar transactional de java pero en php
         //de manera resumida si ocurre un error revierte los cambios
         return DB::transaction(function () use ($data, $product, $buyer) {

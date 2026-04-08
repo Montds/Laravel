@@ -1,31 +1,5 @@
 <?php
 
-use App\Http\Controllers\Buyer\BuyerCategoryController;
-use App\Http\Controllers\Buyer\BuyerController;
-use App\Http\Controllers\Buyer\BuyerProductController;
-use App\Http\Controllers\Buyer\BuyerSellerController;
-use App\Http\Controllers\Buyer\BuyerTransactionController;
-use App\Http\Controllers\Category\CategoryBuyerController;
-use App\Http\Controllers\Category\CategoryController;
-use App\Http\Controllers\Category\CategoryProductController;
-use App\Http\Controllers\Category\CategorySellerController;
-use App\Http\Controllers\Category\CategoryTransactionController;
-use App\Http\Controllers\Product\ProductBuyerController;
-use App\Http\Controllers\Product\ProductBuyerTransactionController;
-use App\Http\Controllers\Product\ProductCategoryController;
-use App\Http\Controllers\Product\ProductController;
-use App\Http\Controllers\Product\ProductTransactionController;
-use App\Http\Controllers\Seller\SellerBuyerController;
-use App\Http\Controllers\Seller\SellerCategoryController;
-use App\Http\Controllers\Seller\SellerController;
-use App\Http\Controllers\Seller\SellerProductController;
-use App\Http\Controllers\Seller\SellerTransactionController;
-use App\Http\Controllers\Transaction\TransactionCategoryController;
-use App\Http\Controllers\Transaction\TransactionController;
-use App\Http\Controllers\Transaction\TransactionSellerController;
-use App\Http\Controllers\User\UserController;
-use Illuminate\Support\Facades\Route;
-
 // 1. Importas el controlador
 
 
@@ -37,6 +11,8 @@ use Illuminate\Support\Facades\Route;
 //esto sirve para limitar el acceso a las rutas pero las rutas deben ir dentro de los corchetes
 //Route::middleware('throttle:limitador')->group(function () {});
 
+
+/* sin autentificacion
 Route::resource('buyers', BuyerController::class)->only(['index', 'show']);
 
 Route::resource('buyers.sellers', BuyerSellerController::class)->only(['index']);
@@ -69,7 +45,124 @@ Route::resource('sellers.buyers', SellerBuyerController::class, ['only' => ['ind
 Route::resource('sellers.products', SellerProductController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
 
 Route::resource('users', UserController::class);//->except(['create', 'edit']);
+*/
 
-Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+/***
+don autentificacion
+ */
+
+
+//Auth::routes();
+
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/home', [HomeController::class, 'index'])->middleware('auth')->name('home');
+
+
+// --- Authentication Routes ---
+
+
+use App\Http\Controllers\Buyer\BuyerController;
+use App\Http\Controllers\Buyer\BuyerCategoryController;
+use App\Http\Controllers\Buyer\BuyerProductController;
+use App\Http\Controllers\Buyer\BuyerSellerController;
+use App\Http\Controllers\Buyer\BuyerTransactionController;
+use App\Http\Controllers\Category\CategoryController;
+use App\Http\Controllers\Category\CategoryBuyerController;
+use App\Http\Controllers\Category\CategoryProductController;
+use App\Http\Controllers\Category\CategorySellerController;
+use App\Http\Controllers\Category\CategoryTransactionController;
+use App\Http\Controllers\Product\ProductController;
+use App\Http\Controllers\Product\ProductBuyerController;
+use App\Http\Controllers\Product\ProductCategoryController;
+use App\Http\Controllers\Product\ProductTransactionController;
+use App\Http\Controllers\Product\ProductBuyerTransactionController;
+use App\Http\Controllers\Seller\SellerController;
+use App\Http\Controllers\Seller\SellerBuyerController;
+use App\Http\Controllers\Seller\SellerCategoryController;
+use App\Http\Controllers\Seller\SellerProductController;
+use App\Http\Controllers\Seller\SellerTransactionController;
+use App\Http\Controllers\Transaction\TransactionController;
+use App\Http\Controllers\Transaction\TransactionCategoryController;
+use App\Http\Controllers\Transaction\TransactionSellerController;
+use App\Http\Controllers\User\UserController;
+use Illuminate\Support\Facades\Route;
+
+
+/**
+ * RUTAS PÚBLICAS (Sin Middleware)
+ */
+Route::resource('buyers', BuyerController::class)->only(['index', 'show']);
+Route::resource('buyers.sellers', BuyerSellerController::class)->only(['index']);
+Route::resource('buyers.transactions', BuyerTransactionController::class)->only(['index']);
+Route::resource('buyers.products', BuyerProductController::class)->only(['index']);
+Route::resource('buyers.categories', BuyerCategoryController::class)->only(['index']);
+
+Route::resource('categories', CategoryController::class)->except(['index', 'show', 'create', 'edit']);
+Route::resource('categories.sellers', CategorySellerController::class)->only(['index']);
+Route::resource('categories.transactions', CategoryTransactionController::class)->only(['index']);
+Route::resource('categories.buyers', CategoryBuyerController::class)->only(['index']);
+
+Route::resource('products', ProductController::class)->except(['index', 'show', 'create', 'edit']);
+Route::resource('products.transactions', ProductTransactionController::class)->only(['index']);
+Route::resource('products.buyers', ProductBuyerController::class)->only(['index']);
+Route::resource('products.categories', ProductCategoryController::class)->only(['update', 'destroy']);
+Route::resource('products.buyers.transactions', ProductBuyerTransactionController::class)->only(['store']);
+
+Route::resource('transactions', TransactionController::class)->only(['index', 'show']);
+Route::resource('transactions.sellers', TransactionSellerController::class)->only(['index']);
+
+Route::resource('sellers', SellerController::class)->only(['index', 'show']);
+Route::resource('sellers.transactions', SellerTransactionController::class)->only(['index']);
+Route::resource('sellers.categories', SellerCategoryController::class)->only(['index']);
+Route::resource('sellers.buyers', SellerBuyerController::class)->only(['index']);
+Route::resource('sellers.products', SellerProductController::class)->only(['index', 'store', 'update', 'destroy']);
+
+Route::resource('users', UserController::class)->except(['store']);
+
+/**
+ * RUTAS PROTEGIDAS (Con client.credentials)
+ */
+Route::middleware(['client.credentials'])->group(function ()
+{
+
+// Categories: index y show protegidos
+    Route::resource('categories', CategoryController::class)->only(['index', 'show']);
+
+    Route::resource('categories.products', CategoryProductController::class)->only(['index']);
+
+    Route::resource('products', ProductController::class)->only(['index', 'show']);
+
+    Route::resource('products.categories', ProductCategoryController::class)->only(['index']);
+
+// Transactions: categories index protegido
+    Route::resource('transactions.categories', TransactionCategoryController::class)->only(['index']);
+
+// Users: Solo el store está protegido
+    Route::resource('users', UserController::class)->only(['store']);
+
+});
+
+
+
+
+Route::middleware(['auth:api'])->group(function () {
+    Route::resource('categories', CategoryController::class)->except(['index', 'show']);
+    Route::resource('products.categories', ProductCategoryController::class)->except(['index']);
+    Route::resource('buyers.categories', BuyerCategoryController::class)->only(['index']);
+    Route::resource('buyers', BuyerController::class)->only(['index', 'show']);
+    Route::resource('buyers.products', BuyerProductController::class)->only(['index']);
+
+    Route::resource('buyers.sellers', BuyerSellerController::class)->only(['index']);
+    Route::resource('buyers.transactions', BuyerTransactionController::class)->only(['index']);
+
+    Route::resource('categories.buyers', CategoryBuyerController::class)->only(['index']);
+
+    Route::resource('sellers.transactions', SellerTransactionController::class)->only(['index']);
+
+
+    Route::resource('users', UserController::class)->except(['store']);
+
+
+
+});

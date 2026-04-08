@@ -3,18 +3,14 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\ApiController;
-use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Seller;
 use App\Models\User;
-use Exception;
+
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 class UserController extends ApiController
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     //para mostrar todos los User
     public function index()
     {
@@ -22,17 +18,7 @@ class UserController extends ApiController
         return $this->showAll($usuarios);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request, $id)
     {
 
@@ -46,10 +32,9 @@ class UserController extends ApiController
         ]);
 
         $datosValidados['status'] = Product::PRODUCTO_NO_DISPONIBLE;
-        $datosValidados['image'] = 'im/1.jpg'; // Aquí iría tu lógica de guardado de archivos
+        $datosValidados['image'] = 'img1.jpg';
         $datosValidados['seller_id'] = $seller->id;
 
-        // 4. Creamos el producto con el array completo
         $product = Product::create($datosValidados);
 
         return $this->showElement($product, 201);
@@ -57,27 +42,14 @@ class UserController extends ApiController
 
     public function show(string $id)
     {
-
             $usuario = User::findOrFail($id);
             return $this->showElement($usuario);
     }
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
 
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
-
 
         //por el momento es mejor no enviar el campo admin
         $datosValidados = $request->validate([
@@ -88,8 +60,6 @@ class UserController extends ApiController
         ]);
 
 
-        try
-        {
             if (isset($datosValidados['name'])) {
                 $user->name = $datosValidados['name'];
             }
@@ -128,18 +98,12 @@ class UserController extends ApiController
 
             return $this->showElement($user);
 
-        }
-        catch (\Exception $e)
-        {
-            return $this->errorResponse("error $e" , 200);
-        }
+
 
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
         try

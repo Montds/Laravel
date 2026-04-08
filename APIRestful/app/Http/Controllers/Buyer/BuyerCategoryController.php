@@ -3,17 +3,14 @@
 namespace App\Http\Controllers\Buyer;
 
 use App\Http\Controllers\ApiController;
-use App\Http\Controllers\Controller;
 use App\Models\Buyer;
-use Illuminate\Http\Request;
 
 class BuyerCategoryController extends ApiController
 {
 
     public function index($id)
     {
-        // Buscamos al comprador manualmente por su ID
-        // Puedes usar findOrFail para que devuelva un 404 si no existe
+
         $buyer = Buyer::findOrFail($id);
 
         $categories = $buyer->transactions()//transacciones

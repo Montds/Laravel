@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\ApiController;
-use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Seller;
 use Illuminate\Http\Request;
@@ -20,17 +19,6 @@ class SellerProductController extends ApiController
         return $this->showElement($products);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
 
     public function store(Request $request, $id)
     {
@@ -53,25 +41,8 @@ class SellerProductController extends ApiController
 
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Seller $seller)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Seller $seller)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $sellerId, $productId)
     {
         $seller = Seller::findOrFail($sellerId);
@@ -111,12 +82,7 @@ class SellerProductController extends ApiController
         return $this->showElement($product);
     }
 
-    /**
-     * Remove the specified resource from storage.
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($sellerId, $productId)
     {
         $seller = Seller::findOrFail($sellerId);

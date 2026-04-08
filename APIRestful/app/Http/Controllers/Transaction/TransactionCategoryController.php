@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Transaction;
 
 use App\Http\Controllers\ApiController;
-use App\Http\Controllers\Controller;
-use App\Models\Product;
 use App\Models\Transaction;
-use Illuminate\Http\Request;
 
 class TransactionCategoryController extends ApiController
 {

@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Buyer;
 
 use App\Http\Controllers\ApiController;
-use App\Http\Controllers\Controller;
 use App\Models\Buyer;
-use Illuminate\Http\Request;
 
 class BuyerProductController extends ApiController
 {
@@ -16,7 +14,9 @@ class BuyerProductController extends ApiController
         $buyer = Buyer::findOrFail($id);
 
 
-        $products = $buyer->transactions()->with('product')->get()->pluck('product')->unique('id')->values();
+        $products = $buyer
+                   ->transactions()->with('product')->get()
+                  ->pluck('product')->unique('id')->values();
 
        return $this->showElement($products);
     }

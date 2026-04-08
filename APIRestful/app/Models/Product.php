@@ -54,6 +54,7 @@ class Product extends Model
     {
         static::updated(function (Product $product)
         {
+            //actualiza el estado del producto a no disponible
             if ($product->quantity == 0 && $product->estaDisponible()) {
                 $product->status = Product::PRODUCTO_NO_DISPONIBLE;
                 $product->saveQuietly();

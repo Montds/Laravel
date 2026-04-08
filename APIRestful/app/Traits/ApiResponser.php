@@ -5,7 +5,7 @@ namespace App\Traits;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
-//lista de metodos a reutilizar
+
 trait ApiResponser
 {
     private function successResponse($data, $code)
@@ -29,45 +29,28 @@ trait ApiResponser
             return $this->showOne($data, $code);
         }
 
-       // return $this->successResponse(['data' => $data], $code);
     }
 
 
     protected function showAll(Collection $collection, $code = 200)
     {
-        //en este metodo puedo aplicar transformaciones sobre la collecion
+        //if ($collection->isEmpty()) {
+            // Envolvemos en 'data' para que siempre responda igual
+        //    return $this->successResponse(['data' => $collection], $code);
+        //}
 
-        if ($collection->isEmpty())
-        {
-            return $this->successResponse(['data' => $collection], $code);
-        }
-
-        //en esta parte se le pueden agregar transformaciones a los datos como ordenarlos
-
-
-        //
-
-        $transformer = $collection->first()->transformer;
-
-        $collection = $this->transformData($collection, $transformer);
-
-        //asignando la collecion en cache sirve para que sea mas rapido aunque quizas lo quite
-
-        //$collection = $this->cacheResponse($collection);
-
+        //$transformer = $collection->first()->transformer;
+       // $collection = $this->transformData($collection, $transformer);
 
         return $this->successResponse($collection, $code);
     }
 
-    /**
-     * Transforma y retorna un solo modelo (Método del maestro)
-     */
+
     protected function showOne(Model $instance, $code = 200)
     {
-        // Extrae el transformador directamente de la instancia
-        $transformer = $instance->transformer;
+        //$transformer = $instance->transformer;
 
-        $instance = $this->transformData($instance, $transformer);
+        //$instance = $this->transformData($instance, $transformer);
 
         return $this->successResponse($instance, $code);
     }

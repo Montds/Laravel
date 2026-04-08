@@ -36,8 +36,6 @@ class CategoryController extends ApiController
     }
 
 
-
-
     public function update(Request $request, string $id)
     {
         $category = Category::findOrFail($id);
