@@ -77,7 +77,7 @@ class User extends Authenticatable
     }
 
 
-    //generar token sin auth
+    //generar token sin auth , no se usa cuando ya se tiene la capa de seguridad integrada
     public static function generarVerificationToken(): string
     {
         return Str::random(40);

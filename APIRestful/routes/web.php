@@ -111,6 +111,8 @@ Route::resource('products.buyers.transactions', ProductBuyerTransactionControlle
 
 Route::resource('transactions', TransactionController::class)->only(['index', 'show']);
 Route::resource('transactions.sellers', TransactionSellerController::class)->only(['index']);
+Route::resource('transactions.categories', TransactionCategoryController::class)->only(['index']);
+
 
 Route::resource('sellers', SellerController::class)->only(['index', 'show']);
 Route::resource('sellers.transactions', SellerTransactionController::class)->only(['index']);
@@ -147,19 +149,45 @@ Route::middleware(['client.credentials'])->group(function ()
 
 
 Route::middleware(['auth:api'])->group(function () {
-    Route::resource('categories', CategoryController::class)->except(['index', 'show']);
-    Route::resource('products.categories', ProductCategoryController::class)->except(['index']);
+
     Route::resource('buyers.categories', BuyerCategoryController::class)->only(['index']);
     Route::resource('buyers', BuyerController::class)->only(['index', 'show']);
     Route::resource('buyers.products', BuyerProductController::class)->only(['index']);
-
     Route::resource('buyers.sellers', BuyerSellerController::class)->only(['index']);
     Route::resource('buyers.transactions', BuyerTransactionController::class)->only(['index']);
-
     Route::resource('categories.buyers', CategoryBuyerController::class)->only(['index']);
+
+
+    Route::resource('categories', CategoryController::class)->except(['index', 'show']);
+
+    Route::resource('categories.sellers', CategorySellerController::class)->only(['index']);
+
+    Route::resource('categories.transactions', CategoryTransactionController::class)->only(['index']);
+
+    Route::resource('products.buyers', ProductBuyerController::class)->only(['index']);//->middleware('scope:purchase-product');;
+
+
+    Route::resource('products.buyers.transactions', ProductBuyerTransactionController::class)->only(['store']) ;//->middleware('scope:purchase-product');;
+
+    Route::resource('products.categories', ProductCategoryController::class)->except(['index']);
+
+
+    Route::resource('products.transactions', ProductTransactionController::class)->only(['index']);
+
+
+    Route::resource('sellers.buyers', SellerBuyerController::class)->only(['index']);
+
+    Route::resource('sellers.categories', SellerCategoryController::class)->only(['index']);
+
+    Route::resource('sellers', SellerController::class)->only(['index', 'show']);
+
+    Route::resource('sellers.products', SellerProductController::class)->only(['index', 'store', 'update', 'destroy']);
 
     Route::resource('sellers.transactions', SellerTransactionController::class)->only(['index']);
 
+    Route::resource('transactions', TransactionController::class)->only(['index', 'show']);
+
+    Route::resource('transactions.sellers', TransactionSellerController::class)->only(['index']);
 
     Route::resource('users', UserController::class)->except(['store']);
 

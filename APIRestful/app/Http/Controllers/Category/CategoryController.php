@@ -15,6 +15,13 @@ class CategoryController extends ApiController
     }
 
 
+    public function show(string $id)
+    {
+        $category = Category::findOrFail($id);
+        return  $this->showElement($category);
+    }
+
+
     public function store(Request $request)
     {
         $datosValidados = $request->validate(
@@ -28,12 +35,6 @@ class CategoryController extends ApiController
         return $this->showElement($category, 201);
     }
 
-
-    public function show(string $id)
-    {
-        $category = Category::findOrFail($id);
-        return  $this->showElement($category);
-    }
 
 
     public function update(Request $request, string $id)
